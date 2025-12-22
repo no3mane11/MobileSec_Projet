@@ -1,292 +1,191 @@
-MobileSec-MS
+<h1 style="color:#2E86C1;">MobileSec-MS</h1>
 
-MobileSec-MS est une plateforme basée sur une architecture microservices dédiée à l’analyse automatisée de la sécurité des applications mobiles Android.
-Elle permet de détecter des vulnérabilités courantes dans les fichiers APK, de générer des rapports détaillés et de proposer des recommandations de correction exploitables.
+MobileSec-MS est une plateforme basée sur une architecture microservices dédiée à l’analyse automatisée de la sécurité des applications mobiles Android (fichiers APK).
 
-Ce projet s’inscrit dans une démarche DevSecOps et s’appuie sur les bonnes pratiques définies par l’OWASP Mobile Security Testing Guide.
+Elle permet de détecter des vulnérabilités courantes, de générer des rapports détaillés et de proposer des recommandations de correction exploitables.  
+Le projet s’inscrit dans une démarche DevSecOps et s’appuie sur les bonnes pratiques définies par l’OWASP Mobile Security Testing Guide.
 
-Sommaire
+<hr/>
 
-Présentation générale
+<h2 style="color:#117864;">Sommaire</h2>
 
-Objectifs du projet
+- Présentation générale  
+- Objectifs du projet  
+- Architecture globale  
+- Description des microservices  
+- Prérequis techniques  
+- Installation  
+- Utilisation  
+- Documentation des API  
+- Tests  
+- Intégration CI/CD  
+- Structure du projet  
+- Développement et contribution  
+- Licence  
 
-Architecture globale
+<hr/>
 
-Description des microservices
+<h2 style="color:#117864;">Présentation générale</h2>
 
-Prérequis techniques
+MobileSec-MS permet d’analyser automatiquement plusieurs aspects de la sécurité des applications mobiles Android, notamment :
 
-Installation
+- Les permissions et la configuration du fichier AndroidManifest  
+- La présence de secrets exposés (clés API, tokens, URLs sensibles)  
+- Les implémentations cryptographiques faibles  
+- Les configurations réseau non sécurisées  
+- Les mauvaises pratiques de développement  
 
-Utilisation
+L’objectif est de fournir une analyse rapide, reproductible et facilement intégrable dans des pipelines d’intégration continue.
 
-Documentation des API
+<hr/>
 
-Tests
+<h2 style="color:#117864;">Objectifs du projet</h2>
 
-Intégration CI/CD
+Les principaux objectifs de MobileSec-MS sont :
 
-Structure du projet
+- Automatiser l’analyse de sécurité des applications mobiles Android  
+- Décomposer l’analyse en microservices indépendants et modulaires  
+- Générer des rapports clairs et exploitables  
+- Proposer des recommandations de correction alignées avec OWASP MASVS  
+- Faciliter l’intégration dans des pipelines CI/CD  
 
-Développement et contribution
+<hr/>
 
-Licence
+<h2 style="color:#117864;">Architecture globale</h2>
 
-1. Présentation générale
+La plateforme repose sur une architecture microservices.  
+Chaque service est responsable d’un type précis d’analyse de sécurité.
 
-MobileSec-MS permet d’analyser automatiquement plusieurs aspects de sécurité des applications mobiles, notamment :
+<b>Flux général de fonctionnement :</b>
 
-Les permissions Android et la configuration du manifeste
+APK uploadé → Analyses par plusieurs services → Agrégation des résultats → Génération du rapport → Suggestions de corrections
 
-La présence de secrets exposés (clés API, tokens, URLs sensibles)
+Les services communiquent via des API REST et peuvent être déployés ou testés indépendamment.  
+Un script central nommé <b>master_launcher.py</b> permet de lancer l’ensemble des services en local pour le développement.
 
-Les implémentations cryptographiques faibles
+<hr/>
 
-Les configurations réseau non sécurisées
+<h2 style="color:#117864;">Description des microservices</h2>
 
-Les mauvaises pratiques de développement
+<h3 style="color:#1F618D;">APK-Scanner (port 8001)</h3>
 
-L’objectif principal est de fournir une analyse rapide, reproductible et intégrable dans des pipelines d’intégration continue.
-
-2. Objectifs du projet
-
-Les objectifs principaux de MobileSec-MS sont :
-
-Automatiser l’analyse de sécurité des applications mobiles Android
-
-Décomposer l’analyse en microservices indépendants et modulaires
-
-Générer des rapports clairs et exploitables
-
-Proposer des recommandations de correction alignées avec OWASP MASVS
-
-Faciliter l’intégration dans des pipelines CI/CD
-
-3. Architecture globale
-
-La plateforme repose sur une architecture microservices.
-Chaque service est responsable d’un type précis d’analyse.
-
-Flux général :
-
-APK uploadé → Analyse par plusieurs services → Agrégation des résultats → Génération du rapport → Suggestions de corrections
-
-Les services communiquent via des API REST et peuvent être déployés ou testés indépendamment.
-
-Un script central (master_launcher.py) permet de lancer l’ensemble des services en local pour le développement.
-
-4. Description des microservices
-4.1 APK-Scanner (port 8001)
-
-Rôle
+<b>Rôle :</b>  
 Analyse statique de la structure de l’APK et du fichier AndroidManifest.xml.
 
-Fonctionnalités principales
+<b>Fonctionnalités :</b>  
+- Extraction des informations générales de l’application  
+- Analyse des permissions dangereuses  
+- Vérification des flags debuggable et allowBackup  
+- Détection des composants exportés  
 
-Extraction des informations générales de l’application
-
-Analyse des permissions dangereuses
-
-Vérification des flags debuggable et allowBackup
-
-Détection des composants exportés
-
-Technologies
+<b>Technologies :</b>  
 FastAPI, Uvicorn, Androguard, python-multipart
 
-4.2 Secret-Hunter (port 8002)
+---
 
-Rôle
+<h3 style="color:#1F618D;">Secret-Hunter (port 8002)</h3>
+
+<b>Rôle :</b>  
 Détection des secrets et informations sensibles codées en dur.
 
-Fonctionnalités principales
+<b>Fonctionnalités :</b>  
+- Analyse des ressources et fichiers DEX  
+- Détection de clés Google API, Firebase, Stripe et OAuth  
+- Identification de l’emplacement et du type de secret  
 
-Analyse des ressources et fichiers DEX
-
-Détection de clés Google API, Firebase, Stripe, OAuth
-
-Identification de l’emplacement et du type de secret
-
-Technologies
+<b>Technologies :</b>  
 FastAPI, Uvicorn, Androguard, python-multipart
 
-4.3 Crypto-Check (port 8003)
+---
 
-Rôle
+<h3 style="color:#1F618D;">Crypto-Check (port 8003)</h3>
+
+<b>Rôle :</b>  
 Analyse des mécanismes cryptographiques utilisés dans l’application.
 
-Fonctionnalités principales
+<b>Fonctionnalités :</b>  
+- Détection des algorithmes faibles comme MD5 et SHA1  
+- Identification des modes AES non sécurisés (ECB)  
+- Analyse des implémentations cryptographiques dans les fichiers DEX  
 
-Détection des algorithmes faibles (MD5, SHA1)
-
-Identification des modes AES non sécurisés (ECB)
-
-Analyse des implémentations cryptographiques dans les DEX
-
-Technologies
+<b>Technologies :</b>  
 FastAPI, Uvicorn, Androguard
 
-4.4 Network-Inspector (port 8004)
+---
 
-Rôle
+<h3 style="color:#1F618D;">Network-Inspector (port 8004)</h3>
+
+<b>Rôle :</b>  
 Analyse des configurations réseau et de la sécurité des communications.
 
-Fonctionnalités principales
+<b>Fonctionnalités :</b>  
+- Détection du trafic en clair (HTTP)  
+- Analyse des paramètres networkSecurityConfig  
+- Identification des URLs non sécurisées  
 
-Détection du trafic en clair (HTTP)
-
-Analyse des paramètres networkSecurityConfig
-
-Identification des URLs non sécurisées
-
-Technologies
+<b>Technologies :</b>  
 FastAPI, Uvicorn, Androguard
 
-4.5 Report-Gen (port 8005)
+---
 
-Rôle
-Agrégation des résultats des différents analyseurs.
+<h3 style="color:#1F618D;">Report-Gen (port 8005)</h3>
 
-Fonctionnalités principales
+<b>Rôle :</b>  
+Centralisation et agrégation des résultats d’analyse.
 
-Centralisation des données d’analyse
+<b>Fonctionnalités :</b>  
+- Regroupement des résultats de tous les analyseurs  
+- Calcul d’un niveau de risque global  
+- Génération de rapports structurés au format JSON  
 
-Calcul d’un niveau de risque global
-
-Génération de rapports structurés en JSON
-
-Technologies
+<b>Technologies :</b>  
 FastAPI, Uvicorn
 
-4.6 Fix-Suggest (port 8006)
+---
 
-Rôle
+<h3 style="color:#1F618D;">Fix-Suggest (port 8006)</h3>
+
+<b>Rôle :</b>  
 Proposition de recommandations de correction.
 
-Fonctionnalités principales
+<b>Fonctionnalités :</b>  
+- Association des vulnérabilités aux exigences OWASP MASVS  
+- Suggestions de corrections concrètes  
+- Exemples de modifications du fichier AndroidManifest  
 
-Association des vulnérabilités aux exigences OWASP MASVS
-
-Suggestions de corrections concrètes
-
-Exemples de modifications AndroidManifest
-
-Technologies
+<b>Technologies :</b>  
 FastAPI, Uvicorn
 
-4.7 CI-Connector (port 8007)
+---
 
-Rôle
+<h3 style="color:#1F618D;">CI-Connector (port 8007)</h3>
+
+<b>Rôle :</b>  
 Orchestration des analyses dans un contexte CI/CD.
 
-Fonctionnalités principales
+<b>Fonctionnalités :</b>  
+- Lancement automatisé de l’ensemble des analyses  
+- Intégration avec GitHub Actions et GitLab CI  
+- Retour d’un résultat global incluant rapports et recommandations  
 
-Lancement automatisé de l’ensemble des analyses
-
-Intégration avec GitHub Actions et GitLab CI
-
-Retour d’un résultat global incluant rapports et recommandations
-
-Technologies
+<b>Technologies :</b>  
 FastAPI, Uvicorn, Requests
 
-5. Prérequis techniques
+<hr/>
 
-Python version 3.10 ou supérieure
+<h2 style="color:#117864;">Prérequis techniques</h2>
 
-Java JDK 11 ou 17 (nécessaire pour l’analyse des APK)
+- Python version 3.10 ou supérieure  
+- Java JDK 11 ou 17 (nécessaire pour l’analyse des APK)  
+- Git  
+- Postman ou curl (optionnel pour les tests)
 
-Git
+<hr/>
 
-Postman ou curl (optionnel pour les tests)
-
-6. Installation
+<h2 style="color:#117864;">Installation</h2>
 
 Cloner le dépôt :
 
+```bash
 git clone https://github.com/no3mane11/MobileSec_Projet.git
 cd MobileSec_Projet
-
-
-Installer les dépendances principales :
-
-pip install fastapi uvicorn androguard python-multipart requests
-
-
-Chaque microservice peut également disposer de son propre fichier requirements.txt.
-
-7. Utilisation
-
-Lancement de tous les services en local :
-
-python master_launcher.py
-
-
-Accès aux interfaces Swagger :
-
-http://127.0.0.1:8001/docs
-
-…
-
-http://127.0.0.1:8007/docs
-
-Les APK peuvent être envoyés via Swagger UI ou via des requêtes API.
-
-8. Documentation des API
-
-Chaque microservice expose automatiquement sa documentation grâce à FastAPI.
-
-Exemples d’endpoints principaux :
-
-POST /scan pour les services d’analyse
-
-POST /generate-report pour la génération du rapport
-
-POST /suggest-fixes pour les recommandations
-
-POST /run-ci-scan pour une analyse complète automatisée
-
-9. Tests
-
-Des APK de test sont fournis pour valider le fonctionnement des services.
-Les tests peuvent être réalisés manuellement via Swagger ou automatiquement via le CI-Connector.
-
-10. Intégration CI/CD
-
-Le projet peut être intégré dans des pipelines CI/CD tels que GitHub Actions ou GitLab CI afin d’automatiser les analyses de sécurité à chaque push ou pull request.
-
-11. Structure du projet
-MobileSec-MS/
-├── apk-scanner/
-├── secret-hunter/
-├── crypto-check/
-├── network-inspector/
-├── report-gen/
-├── fix-suggest/
-├── ci-connector/
-├── master_launcher.py
-├── samples/
-└── docs/
-
-12. Développement et contribution
-
-Les contributions sont possibles via des branches dédiées.
-Les ajouts recommandés incluent :
-
-Support des applications iOS (IPA)
-
-Nouveaux analyseurs de vulnérabilités
-
-Tableau de bord web
-
-Conteneurisation Docker
-
-13. Licence
-
-Ce projet est distribué sous licence MIT.
-Il est destiné à un usage académique et pédagogique.
-
-Note finale
-Ce projet est réalisé dans un cadre universitaire afin de démontrer l’utilisation d’une architecture microservices pour l’analyse de sécurité mobile.
-Une utilisation en production nécessiterait des mécanismes supplémentaires de sécurité, d’authentification et de montée en charge.

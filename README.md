@@ -189,3 +189,36 @@ Cloner le dépôt :
 ```bash
 git clone https://github.com/no3mane11/MobileSec_Projet.git
 cd MobileSec_Projet
+Installer les dépendances principales :
+pip install fastapi uvicorn androguard python-multipart requests
+<hr/> <h2 style="color:#117864;">Utilisation</h2>
+Lancement de tous les services en local :
+python master_launcher.py
+Accès aux interfaces Swagger via :
+
+http://127.0.0.1:8001/docs
+
+jusqu’à
+http://127.0.0.1:8007/docs
+
+<hr/> <h2 style="color:#117864;">Structure du projet</h2>
+MobileSec-MS/
+├── apk-scanner/
+├── secret-hunter/
+├── crypto-check/
+├── network-inspector/
+├── report-gen/
+├── fix-suggest/
+├── ci-connector/
+├── master_launcher.py
+├── samples/
+└── docs/
+<hr/> <h2 style="color:#117864;">Licence</h2>
+
+Ce projet est distribué sous licence MIT.
+Il est destiné à un usage académique et pédagogique.
+
+<hr/> <i> Ce projet a été réalisé dans un cadre universitaire afin de démontrer l’utilisation d’une architecture microservices pour l’analyse de sécurité des applications mobiles. Une utilisation en production nécessiterait des mécanismes supplémentaires de sécurité, d’authentification et de montée en charge. </i> ```
+
+
+

@@ -1,0 +1,4 @@
+fastapi
+uvicorn
+androguard
+python-multipart

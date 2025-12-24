@@ -139,7 +139,10 @@ Il vise à démontrer l’utilisation d’une architecture microservices pour l�
 <i>
 Une utilisation en production nécessiterait des mécanismes supplémentaires de sécurité, d’authentification et de montée en charge.
 </i>
+
+https://github.com/user-attachments/assets/7395e50d-27f5-4abd-a90a-00d706b1c287
+
+
+
 ## 🎥 Simulation du projet
-<video src="https://github.com/no3mane11/MobileSec_Projet/blob/main/simulationmobilesec_Compresser.mp4?raw=true" width="100%" controls>
-  Votre navigateur ne supporte pas la lecture de vidéos.
-</video>
+https://github.com/user-attachments/assets/ID_DE_VOTRE_VIDEO
